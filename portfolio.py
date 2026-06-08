@@ -1,68 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 portfolio.py — 多资产组合层面 VaR 聚合
-=======================================
 
-理论框架
---------
 
-**组合收益率**
 
-设组合由 :math:`K` 个资产构成，权重向量
-:math:`\\mathbf{w} = (w_1,\\ldots,w_K)^\\top`，:math:`\\sum_k w_k = 1`。
-组合单期收益率为
-
-.. math::
-
-    r_p = \\mathbf{w}^\\top \\mathbf{r} = \\sum_{k=1}^K w_k r_k
-
-**条件协方差矩阵（DCC 近似）**
-
-设 :math:`\\hat{\\sigma}_{k,T+1|T}` 为资产 :math:`k` 的 GARCH 单步预测
-条件标准差，历史收益率相关系数矩阵为
-:math:`\\hat{\\mathbf{C}} = (\\hat{\\rho}_{ij})_{K \\times K}`。
-条件协方差矩阵（对角修正相关法，DCC 近似）为
-
-.. math::
-
-    \\hat{\\boldsymbol{\\Sigma}}_{T+1|T}
-    = \\mathbf{D}_{T+1} \\, \\hat{\\mathbf{C}} \\, \\mathbf{D}_{T+1}
-
-其中 :math:`\\mathbf{D}_{T+1} = \\mathrm{diag}(\\hat{\\sigma}_{1,T+1|T}, \\ldots, \\hat{\\sigma}_{K,T+1|T})`。
-
-**组合方差与 VaR**
-
-.. math::
-
-    \\hat{\\sigma}_p^2 = \\mathbf{w}^\\top \\hat{\\boldsymbol{\\Sigma}}_{T+1|T} \\mathbf{w}
-
-.. math::
-
-    \\mathrm{VaR}^{\\mathrm{port}}_{1-\\alpha}(h)
-    = |z_\\alpha| \\cdot \\hat{\\sigma}_p \\cdot \\sqrt{h}
-
-**成分 VaR（Component VaR）**
-
-资产 :math:`k` 对组合 VaR 的贡献（加总后等于组合 VaR）：
-
-.. math::
-
-    \\mathrm{CVaR}_k
-    = w_k \\cdot \\frac{\\partial \\mathrm{VaR}_p}{\\partial w_k}
-    = w_k \\cdot \\frac{(\\hat{\\boldsymbol{\\Sigma}}\\mathbf{w})_k}{\\hat{\\sigma}_p}
-    \\cdot |z_\\alpha| \\cdot \\sqrt{h}
-
-成分 VaR 满足加和性：:math:`\\sum_k \\mathrm{CVaR}_k = \\mathrm{VaR}_p`。
-
-**分散化收益**
-
-.. math::
-
-    \\text{分散化收益}
-    = \\mathrm{VaR}^{\\text{个体加总}}_{p} - \\mathrm{VaR}^{\\text{组合}}_p
-    = \\left(\\sum_k w_k \\cdot \\mathrm{VaR}_k\\right) - \\mathrm{VaR}_p \\geq 0
-
-该量度量了多资产分散化消除的风险，由相关系数矩阵中的非对角项决定。
 """
 
 from __future__ import annotations
